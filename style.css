@@ -1,0 +1,66 @@
+body {
+	font-family: "Ubuntu";
+	background-color: #e2eaea;
+	text-color: #111111;
+}
+.container {
+	margin-left: 10vw;
+	margin-right: 10vw;
+	margin-top: 10vh;
+	text-align: center;
+
+}
+#drawcanvas {
+	border-width: 1px;
+	border-color: #111111;
+	border-style: solid;
+}
+
+.slidecontainer {
+	width: 100%;
+}
+
+.flex-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+
+	column-gap: 35px;
+}
+
+.infodata {
+	font-size: 13pt;
+	line-height:1.55;
+	text-align: left;
+}
+
+/* The slider */
+input {
+	width: 500px;
+	background: #d3d3d3; /* Grey background */
+	outline: none; /* Remove outline */
+	opacity: 0.8;
+	transition: opacity .2s;
+}
+
+.langswitch {
+	font-variant-caps: small-caps;
+}
+
+.langswitch:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+@media only screen and (prefers-color-scheme: dark)
+{
+	body {
+		background-color: #111111;
+		color: #d2dada;
+	}
+	#drawcanvas {
+		border-color: #d2dada;
+
+	}
+}

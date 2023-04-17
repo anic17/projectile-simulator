@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Projectile simulator</title>
+	<link rel="stylesheet" href="style.css">
+
+
+
+</head>
+<body onload="initCanvas()">
+	<div class="container">
+		<span onclick="langIndex(0)" class="langswitch">en</span>
+			<span onclick="langIndex(1)" class="langswitch">ca</span>
+			<span onclick="langIndex(2)" class="langswitch">fr</span>
+			<span onclick="langIndex(3)" class="langswitch">es</span>
+		<div class="flex-container">
+			<div class="infodata">
+				<span id="timetakenDisp">Time taken</span>: <span id="timetaken">0</span> s<br>
+				<span id="finalvelocityDisp">Final velocity</span>: <span id="finalvelocity">0</span> m/s<br>
+				<span id="finalpositionDisp">Final position</span>: <span id="finalposition">0</span> m<br>
+				<span id="maximumheightDisp">Maximum height</span>: <span id="maximumheight">0</span> m<br>
+			</div>
+			<canvas id="drawcanvas" width="1600" height="900"></canvas>
+			<div id="languageName">
+				Language: English
+			</div>
+
+		</div>
+		<div class="slidecontainer">
+		  <input type="range" min="0" max="90" value="45" class="angleSlider" id="angleSlider">
+		  <p><span id="angleDisp">Angle</span>: <span id="angleOut">45</span>º</p>
+		</div>
+		<div class="slidecontainer">
+		  <input type="range" min="0" max="300" value="100" class="velocitySlider" id="velocitySlider">
+		  <p><span id="velocityDisp">Velocity</span>: <span id="velocityOut">10</span> m/s</p>
+		</div>
+		<div class="slidecontainer">
+		  <input type="range" min="1" max="300" value="98" class="gravitySlider" id="gravitySlider">
+		  <p><span id="gravityDisp">Gravity</span>: <span id="gravityOut">9.8</span> m/s&sup2;</p>
+			</div>
+		</div>
+	<script src="script.js"></script>
+</body>
+</html>
