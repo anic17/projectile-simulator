@@ -54,13 +54,11 @@ input {
 }
 
 @media only screen and (prefers-color-scheme: dark)
-{
-	body {
-		background-color: #111111;
+{ 	body {
+		background-color: #191917;
 		color: #d2dada;
 	}
 	#drawcanvas {
 		border-color: #d2dada;
-
 	}
 }

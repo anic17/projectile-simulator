@@ -36,6 +36,18 @@ let ctx = canvas.getContext("2d");
 let ball_color = "#FF8000", ball_radius = 20;
 let line_color = "#121212";
 
+if (window.matchMedia) {
+  // Check if the dark-mode Media-Query matches
+  if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+    line_color = "#D2DADA";
+  } else {
+    // Light
+  }
+} else {
+  // Default (when Media-Queries are not supported)
+}
+
+
 let cx = ctx.canvas.width, cy = ctx.canvas.height;
 let bx = ball_radius, by = cy-ball_radius;
 let default_velocity = 10, default_angle = 45; // 10 m/s and 45 deg
@@ -43,7 +55,7 @@ let increment = 15;
 
 let initial_x=0, initial_y=0;
 
-let elasticity_index = 0.67;
+let elasticity_index = 0.6;
 	let lang_index = 1;
 
 
@@ -88,8 +100,6 @@ function langIndex(index)
 
 
 function initCanvas(){
-
-
 	setLanguage(lang_index);
 
 	angleSlider.value = default_angle;
@@ -97,6 +107,13 @@ function initCanvas(){
 	gravitySlider.value = gravity*10;
 	startGame();
 }
+
+const resizeObserver = new ResizeObserver(() => {
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+});
+
+resizeObserver.observe(canvas);
 
 function round(num,dec)
 {
@@ -123,9 +140,9 @@ function previewLine()
 	let resol = 10;
 	if(velocity > resol)
 	{
-		resol = velocity;
+		resol = Math.round(velocity)+1;
 	}
-	resol += gravity/4;
+	resol += Math.round(gravity/4);
 
 	launchBall(angle, velocity, ball_radius/increment+initial_x, initial_y, resol, increment, false, 0);
   drawBall(ball_radius, cy-ball_radius, ball_radius, ball_color);
@@ -141,11 +158,10 @@ function launchBall(angle, vel, x0, y0, steps, inc, showBall, bounceCount)
 
 
 	let x=x0, y=y0;
-	let time=0;
 	Vx = vel*Math.cos(angleRad), Vy = vel*Math.sin(angleRad);
 
 	//console.log("Vx: " + Vx + " Vy: " + Vy + " Delta=" + (Math.pow(Vy, 2) - 2*gravity*y0));
-	if((vel > 0 && Vy > 0) || (angle == 0 && y0 > 0))
+	if(((vel > 0 && Vy > 0) || (angle == 0 && y0 > 0)) && x0*inc < cx)
 	{
 		ctx.strokeStyle = line_color;
 		let endtime = (Vy+Math.sqrt(Math.pow(Vy, 2) + 2*gravity*y0))/gravity; // Calculate the end time
@@ -157,36 +173,44 @@ function launchBall(angle, vel, x0, y0, steps, inc, showBall, bounceCount)
 			Solving for x by using the quadratic formula and simplyfing gives that expression
 
 		*/
-		let delta_time = endtime / steps, inc_factor=inc; // After isolating from the equation
+		let delta_time = endtime / steps; // After isolating from the equation
 		let count = 0;
 		//console.log('Launching ball with angle ' + angle + 'º, velocity ' + vel + ' m/s, gravity ' + gravity + ' m/s^2 and y0 ' + y0 + 'm');
-
+		console.log("DT: " + delta_time + " ET: " + endtime + " STEPS: " + steps);
 		let xf = x0 + Vx*endtime;
 
 		let vf = Math.sqrt(Math.pow(Vy - gravity*endtime, 2) + Math.pow(Vx, 2));
-		console.log("Final velocity: " + vf);
+		//console.log("Final velocity: " + vf);
 		//console.log("Xf=" + xf);
-		
-		let max_y = y0 + Math.pow(Vy, 2)/(2*gravity);
-		ctx.moveTo(inc_factor*x0, cy-inc_factor*y0);
+		let time=0;
 
-		while(time <= endtime || (time >= endtime && y > 0))
+		let max_y = y0 + Math.pow(Vy, 2)/(2*gravity);
+		ctx.moveTo(inc*x0, cy-inc*y0);
+		for(let k = 0; k < endtime; k+= delta_time)
 		{
-			if((inc_factor*x > cx || inc_factor*y > cy) && count > 0)
+			if((inc*x > cx) && count > 0)
 			{
 				break; // Don't process things that aren't rendered
 			}
-			ctx.moveTo(inc_factor*x, cy-(inc_factor*y));
+			ctx.moveTo(inc*x, cy-(inc*y));
+			time += delta_time;
 
 			x = x0 + Vx*time;
 			y = y0 + Vy*time - Math.pow(time, 2)*gravity/2;
-			//console.log("X: " + x + " Y: " + y + " Time: " + time + "\tEndtime: " + endtime);
+			if(inc*y <= cy)
+			{
+				ctx.lineTo(inc*x, cy-(inc*y));
+				ctx.stroke();
+			}
 
-			//ctx.clearRect(0, 0, cx, cy);
-			ctx.lineTo(inc_factor*x, cy-(inc_factor*y));
-			ctx.stroke();
-			time += delta_time;
 			count++;
+			console.log("X: " + x + " Y: " + y + " Time: " + time + "\tEndtime: " + endtime);
+			if(Math.abs(endtime - k) < 1e-8 || Math.abs(y) < 1e-8)
+			{
+				console.log("Break ok " + endtime + " " + k);
+				break;
+			}
+
 		}
 			
 		
@@ -194,10 +218,16 @@ function launchBall(angle, vel, x0, y0, steps, inc, showBall, bounceCount)
 		{
 			if(showBall)
 			{
-				drawBall(xf*inc_factor, cy-ball_radius, ball_radius, ball_color);
+				drawBall(xf*inc, cy-ball_radius, ball_radius, ball_color);
 			} else {
-				console.log("Current velocity: " + vel + "\nNew velocity: " + vel*elasticity_index);
-				launchBall(angle, vel*elasticity_index, x, 0, steps, inc, showBall, bounceCount+1); // y0 = 0 because it bounces with the ground (y = 0)
+				console.log("Current velocity: " + vel + "\nNew velocity: " + vel*
+				elasticity_index);
+				if(xf*inc < cx)
+				{
+					console.log("x*inc=", x*inc, "; cx=" + cx);
+					launchBall(angle, vel*elasticity_index, x, 0, steps, inc, showBall, bounceCount+1); // y0 = 0 because it bounces with the ground (y = 0)
+
+				}
 			}
 		}
 
@@ -211,13 +241,12 @@ function startGame()
 	previewLine();
 	drawBall();
 	document.addEventListener("keypress", function(event) {
-	  if (event.keyCode == 32 || event.keyCode == 13) {
+	 if (event.keyCode == 32 || event.keyCode == 13) {
 
 	    launchBall(angle, velocity, ball_radius/increment, 0, 200, 15, true, 0);
 	  }
 })
 
-	
 
 }
 
