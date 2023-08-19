@@ -4,6 +4,7 @@ This program allows you to simulate projectile physics with variable initial con
 
 The purpose of making this projectile motion simulator was to learn a bit about about JavaScript's 2D canvas, and improve my web designing skills.
 
+See the **[Live demo](https://anic17.github.io/projectile-simulator)**
 
 
 ## Features
@@ -29,6 +30,7 @@ The language preferences get saved every time a language is selected.
 
 # Screenshot
 
-
+<img src="resources/screenshot.png"></img>
+###### Screenshot showing the user interface and the path of the ball
 
 **Copyright &copy; 2023 anic17 Software**
