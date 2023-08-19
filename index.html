@@ -1,46 +1,152 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Projectile simulator</title>
-	<link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta
+      name="description"
+      content="Simple projectile motion simulator made with JavaScript"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Russo+One&family=Tektur:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta http-equiv="expires" content="0" />
+    <title>Projectile simulator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body onload="initCanvas()">
+    <a href="https://github.com/anic17/projectile-simulator"><h1 class="mainheader" title="View the source code on GitHub">Projectile motion simulator</h1></a>
+    <div class="container">
+      <span class="langdisp">
+        <span onclick="langIndex(0)" class="langswitch" id="enlang" title="English">en</span>
+        <span onclick="langIndex(1)" class="langswitch" id="calang" title="Català">ca</span>
+        <span onclick="langIndex(2)" class="langswitch" id="frlang" title="Français">fr</span>
+        <span onclick="langIndex(3)" class="langswitch" id="eslang" title="Español">es</span>
+      </span>
+
+      <div class="flexcont">
+
+         <div class="infodata">
+          <div class="fullwidth">
+            <div class="infodataline">
+              <span id="timetakenDisp">Time taken</span>:
+              <br>
+          <strong><span id="timetaken">0</span> s<br /></strong>
+            </div>
+            <div class="infodataline">
+
+          <span id="finalvelocityDisp">Final velocity</span>:
+          <br>
+          <strong><span id="finalvelocity">0</span> m/s<br /></div></strong>
+                      <div class="infodataline">
+
+          <span id="finalpositionDisp">Final position</span>:
+          <br>
+          <strong><span id="finalposition">0</span> m<br /></div></strong>
+                      <div class="infodataline">
+
+          <span id="maximumheightDisp">Maximum height</span>:
+          <br>
+          <strong><span id="maximumheight">0</span> m<br /></div></strong>
+        </div>
+        </div>
+        <div class="canvascont">
+          <canvas id="drawcanvas" width="800" height="600"></canvas>
+        </div>
+        <div class="langdata">
+          <div class="infodataline">
+           <div id="languageName"></div>
+         </div>
+        </div>
 
 
+      </div>
+      
 
-</head>
-<body onload="initCanvas()">
-	<div class="container">
-		<span onclick="langIndex(0)" class="langswitch">en</span>
-			<span onclick="langIndex(1)" class="langswitch">ca</span>
-			<span onclick="langIndex(2)" class="langswitch">fr</span>
-			<span onclick="langIndex(3)" class="langswitch">es</span>
-		<div class="flex-container">
-			<div class="infodata">
-				<span id="timetakenDisp">Time taken</span>: <span id="timetaken">0</span> s<br>
-				<span id="finalvelocityDisp">Final velocity</span>: <span id="finalvelocity">0</span> m/s<br>
-				<span id="finalpositionDisp">Final position</span>: <span id="finalposition">0</span> m<br>
-				<span id="maximumheightDisp">Maximum height</span>: <span id="maximumheight">0</span> m<br>
-			</div>
-			<canvas id="drawcanvas" width="800" height="600"></canvas>
-			<div id="languageName">
-				Language: English
-			</div>
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="0"
+          max="90"
+          value="45"
+          class="angleSlider"
+          id="angleSlider"
+        />
+        <div class="slidedispcont">
+          <span id="angleDisp">Angle</span>: <span id="angleOut">45</span>º
+        </div>
+      </div>
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="0"
+          max="300"
+          value="100"
+          class="velocitySlider"
+          id="velocitySlider"
+        />
+        <div class="slidedispcont">
+          <span id="velocityDisp">Velocity</span>:
+          <span id="velocityOut">10</span> m/s
+        </div>
+      </div>
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="1"
+          max="300"
+          value="98"
+          class="gravitySlider"
+          id="gravitySlider"
+        />
+        <div class="slidedispcont">
+          <span id="gravityDisp">Gravity</span>:
+          <span id="gravityOut">9.8</span> m/s&sup2;
+        </div>
+      </div>
 
-		</div>
-		<div class="slidecontainer">
-		  <input type="range" min="0" max="90" value="45" class="angleSlider" id="angleSlider">
-		  <p><span id="angleDisp">Angle</span>: <span id="angleOut">45</span>º</p>
-		</div>
-		<div class="slidecontainer">
-		  <input type="range" min="0" max="300" value="100" class="velocitySlider" id="velocitySlider">
-		  <p><span id="velocityDisp">Velocity</span>: <span id="velocityOut">10</span> m/s</p>
-		</div>
-		<div class="slidecontainer">
-		  <input type="range" min="1" max="300" value="98" class="gravitySlider" id="gravitySlider">
-		  <p><span id="gravityDisp">Gravity</span>: <span id="gravityOut">9.8</span> m/s&sup2;</p>
-			</div>
-		</div>
-	<script src="script.js"></script>
-</body>
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="0"
+          max="99"
+          value="60"
+          class="restitutionCoefSlider"
+          id="restitutionCoefSlider"
+        />
+        <div class="slidedispcont">
+          <span id="restitutionCoefDisp">Coefficient of restitution</span>:
+          <span id="restitutionCoefOut">0.6</span>
+        </div>
+      </div>
+
+      <div class="slidecontainer">
+        <input
+          type="range"
+          min="0"
+          max="300"
+          value="0"
+          class="initialHeightSlider"
+          id="initialHeightSlider"
+        />
+        <div class="slidedispcont">
+          <span id="initialHeightDisp">Initial height</span>:
+          <span id="initialHeightOut">10</span> m
+        </div>
+      </div>
+
+    </div>
+    <script src="script.js"></script>
+    <br />
+    <br />
+   
+    <footer class="copyright">
+      Made by <a class="increase" href="https://github.com/anic17">anic17</a>
+    </footer>
+  </body>
 </html>
